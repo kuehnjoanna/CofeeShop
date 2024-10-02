@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -9,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "de.syntax_institut.jpc"
-        minSdk = 24
+        minSdk = 25
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -59,6 +60,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -66,4 +68,20 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+//
+
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
+    // Blur effect
+    implementation("dev.chrisbanes.haze:haze-jetpack-compose:0.5.4")
+    implementation("dev.chrisbanes.haze:haze-materials:0.5.4")
+
+    // Compose Navigation
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha10")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+    //
+    debugImplementation(libs.navigation.compose)
+    debugImplementation(libs.kotlinx.serialization.json)
+
+    implementation("com.exyte:animated-navigation-bar:1.0.0")
 }

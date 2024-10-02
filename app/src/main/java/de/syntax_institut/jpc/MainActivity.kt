@@ -16,9 +16,11 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CardElevation
@@ -38,25 +40,74 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import de.syntax_institut.jpc.ui.theme.JPCTheme
+import kotlinx.serialization.Serializable
 
 class MainActivity : ComponentActivity() {
+    private lateinit var navController: NavHostController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            JPCTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
+//            JPCTheme {
 
-                    Greeting("Android")
-                }
-            }
+            navController = rememberNavController()
+            NavGraph(navController = navController)
+
+//                val navController = rememberNavController()
+//                NavHost(
+//                    navController = navController,
+//                    startDestination = Homescreen
+//                ){
+//                    composable<Homescreen>{
+////                        Column(
+////                            modifier = Modifier.fillMaxSize(),
+////                            verticalArrangement = Arrangement.Center,
+////                            horizontalAlignment = Alignment.CenterHorizontally
+////                        ) {
+////                            Button(onClick = { /*TODO*/ }) {
+////                                Text(text = "Go to screen B")
+////                            }
+////                        }
+//                        Homescreen()
+//                    }
+//                    composable<SecondScreen> {
+//                        SecondScreen()
+//                    }
+//                }
+////                Surface(
+////                    modifier = Modifier.fillMaxSize(),
+////                    color = MaterialTheme.colorScheme.background
+////                ) {
+////                    Homescreen()
+////                }
+            /*
+            // A surface container using the 'background' color from the theme
+            Surface(
+                modifier = Modifier.fillMaxSize(),
+                color = MaterialTheme.colorScheme.background
+            ) {
+
+                Greeting("Android")
+            }*/
+            //
         }
     }
 }
+
+@Serializable
+object Homescreen
+
+@Serializable
+data class SecondScreen(
+    val name: String?,
+    val total: Int
+)
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
@@ -74,6 +125,7 @@ fun Headline(headline: String, modifier: Modifier = Modifier) {
         fontSize = 40.sp
     )
 }
+
 @Composable
 fun Headline2(headline: String, modifier: Modifier = Modifier) {
     Text(
@@ -84,11 +136,10 @@ fun Headline2(headline: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ImageDisplay(
-    painter: Painter,
+fun DetailCard(
+    modifier: Modifier = Modifier,
     contentDescription: String,
     title: String,
-    modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier
@@ -97,25 +148,60 @@ fun ImageDisplay(
         shape = RoundedCornerShape(15.dp),
         elevation = CardDefaults.cardElevation(5.dp)
     ) {
+        Text(title, style = TextStyle(androidx.compose.ui.graphics.Color.Blue, fontSize = 16.sp))
+        Text(
+            text = "",
+            modifier = modifier,
+        )
+    }
+
+}
+
+@Composable
+fun ImageDisplay(
+    painter: Painter,
+    contentDescription: String,
+    title: String,
+    modifier: Modifier = Modifier
+) {
+    Image(
+        painter = painter, contentDescription = contentDescription,
+        contentScale = ContentScale.Crop, modifier = Modifier
+            .width(100.dp)
+            .height(100.dp)
+            .offset(10.dp, 0.dp)
+            .zIndex(1f)
+    )
+    Card(
+        modifier = modifier
+            .padding(0.dp, 0.dp, 0.dp, 20.dp)
+            .width(120.dp)
+            .height(120.dp)
+            .offset(0.dp, -25.dp),
+        shape = RoundedCornerShape(15.dp),
+        elevation = CardDefaults.cardElevation(5.dp)
+    ) {
         Box(modifier = Modifier.height(200.dp)) {
-            Image(
-                painter = painter, contentDescription = contentDescription,
-                contentScale = ContentScale.Crop,
-            )
+            // Image(
+            ///    painter = painter, contentDescription = contentDescription,
+            //      contentScale = ContentScale.Crop,
+            //    )
             Box(
                 modifier = Modifier
                     .fillMaxSize()
+                    .background(androidx.compose.ui.graphics.Color.Blue)
                     .padding(12.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Text(title, style = TextStyle(androidx.compose.ui.graphics.Color.Blue, fontSize = 16.sp))
+                Text(
+                    title,
+                    style = TextStyle(androidx.compose.ui.graphics.Color.Blue, fontSize = 16.sp)
+                )
             }
         }
     }
-    Text(
-        text = "",
-        modifier = modifier,
-    )
+
+
 }
 
 @Preview(showBackground = true)
@@ -128,7 +214,13 @@ fun GreetingPreview() {
                 .background(androidx.compose.ui.graphics.Color.Black),
             color = MaterialTheme.colorScheme.background
         ) {
-            Column(modifier = Modifier.background(color = androidx.compose.ui.graphics.Color(0xFFA67B5B))) {
+            Column(
+                modifier = Modifier.background(
+                    color = androidx.compose.ui.graphics.Color(
+                        0xFFA67B5B
+                    )
+                )
+            ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -146,7 +238,7 @@ fun GreetingPreview() {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(20.dp)
+                        .padding(20.dp, 20.dp, 20.dp, 20.dp)
                         .background(androidx.compose.ui.graphics.Color.LightGray),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
@@ -163,24 +255,20 @@ fun GreetingPreview() {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column {
-                        ImageDisplay(painter = painterResource(id = R.drawable.espresso), contentDescription = "", title = "")
-                        Greeting(name = "Title")
-                        Greeting(name = "short description")
-                        Row {
+                        ImageDisplay(
+                            painter = painterResource(id = R.drawable.espresso),
+                            contentDescription = "",
+                            title = ""
+                        )
 
-                            Greeting(name = "Price")
-                            Greeting(name = "Button")
-                        }
                     }
                     Column {
-                        ImageDisplay(painter = painterResource(id = R.drawable.cappuccino), contentDescription = "", title = "")
-                        Greeting(name = "Title")
-                        Greeting(name = "short description")
-                        Row {
+                        ImageDisplay(
+                            painter = painterResource(id = R.drawable.cappuccino),
+                            contentDescription = "",
+                            title = ""
+                        )
 
-                            Greeting(name = "Price")
-                            Greeting(name = "Button")
-                        }
                     }
                 }
 
@@ -188,7 +276,7 @@ fun GreetingPreview() {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(20.dp)
+                        .padding(20.dp, 0.dp)
                         .background(androidx.compose.ui.graphics.Color.LightGray),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
@@ -197,13 +285,18 @@ fun GreetingPreview() {
                     Greeting("see more")
                 }
 
-                Row (
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(20.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically){
-                    ImageDisplay(painter = painterResource(id = R.drawable.cookie), contentDescription = "", title = "")
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    ImageDisplay(
+                        painter = painterResource(id = R.drawable.cookie),
+                        contentDescription = "hoi",
+                        title = "hkjk"
+                    )
                     Column {
                         Greeting(name = "Title")
                         Greeting(name = "short description")
